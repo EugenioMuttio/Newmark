@@ -33,7 +33,12 @@ vt=[];
 
 sol_ex=@(t) v0*sin(w*t)/w;
 
-for i=ti:tf    
+n=tf/delta_t;
+vt = linspace(0,tf,n);
+
+i=1;
+iter=0;
+while iter<=tf   
     
     u_n1(i)=un + delta_t*vn+0.5*delta_t^2*(1-2*beta)*an;
     v_n1(i)=vn+delta_t*(1-gamma)*an;
@@ -43,13 +48,14 @@ for i=ti:tf
     vn=v_n1(i);
     an=a_n1(i);
     
+    iter=iter+delta_t;
+    i=i+1;
 end
 
-n=tf/delta_t;
-vt = linspace(0,tf,n);
 
-plot(u_n1);
+
+plot(vt,u_n1);
 hold on
 plot(vt,sol_ex(vt));
-plot(vt,2/5*sin(5*vt));
+%plot(vt,2/5*sin(5*vt));
 
