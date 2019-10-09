@@ -9,7 +9,7 @@ a0=0;
 
 %Parameter
 gamma=0.5;
-beta=0;
+beta=1/12;
 
 w=5;
 T=1/w;
@@ -28,41 +28,60 @@ v_n1=[];
 a_n1=[];
 u_ex=[];
 vt=[];
+u_n1_b=[];
+deltaT=[];
+deltaT_b=[];
 
 %Exact Solution
 
 sol_ex=@(t) v0*sin(w*t)/w;
 
-for i=ti:tf    
-    
-    u_n1(i)=un + delta_t*vn+0.5*delta_t^2*(1-2*beta)*an;
-    v_n1(i)=vn+delta_t*(1-gamma)*an;
-    a_n1(i)=-k*u_n1(i)/(1+k*beta*delta_t^2);
-    
-    un=u_n1(i);
-    vn=v_n1(i);
-    an=a_n1(i);
-    
-end
-
-
-% for i=ti:tf    
-%     
-%     u_n1(i)=un + delta_t*vn+0.5*delta_t^2*(1-2*beta)*an;
-%     v_n1(i)=vn+delta_t*(1-gamma)*an;
-%     a_n1(i)=-w^2*u_n1(i)/(1+w^2*beta*delta_t^2);
-%     
-%     un=u_n1(i);
-%     vn=v_n1(i);
-%     an=a_n1(i);
-%     
-% end
-
 n=tf/delta_t;
 vt = linspace(0,tf,n);
+nT=tf/T;
+vP = [];
+i=1;
+iP=1;
+iter=0;
 
-plot(u_n1);
+%for b=1:length(delta_t)
+    while iter<=tf   
+
+        u_n1(i)=un + delta_t*vn+0.5*delta_t^2*(1-2*beta)*an;
+        v_n1(i)=vn+delta_t*(1-gamma)*an;
+        a_n1(i)=-w^2*u_n1(i)/(1+w^2*beta*delta_t^2);
+        
+        if sign(u_n1(i))~=sign(un) 
+            t1=iter-delta_t;
+            t2=iter;
+            u2
+            vP(iP)=(t2-t1)/2+t1;
+            iP=iP+1;
+        end
+
+        un=u_n1(i);
+        vn=v_n1(i);
+        an=a_n1(i);
+        
+
+        iter=iter+delta_t;
+        i=i+1;
+        
+    end
+
+%end
+
+
+
+plot(vt,u_n1, '+r');
 hold on
-plot(vt,sol_ex(vt));
-plot(vt,2/5*sin(5*vt));
+%plot(vt,sol_ex(vt),'-b');
+plot(vt,v_n1, '-k');
+plot(vP,sol_ex(vP), '+g');
+grid on
+hold off
+
+
+
+legend('Newmark','Exact','vel')
 
