@@ -3,7 +3,6 @@ clear all
 %Newmark Method
 
 %Initial Conditions
- 
 
 u0=0;
 v0=2;
@@ -95,20 +94,9 @@ for dti=1:length(delta_t)
     
     deltaT(dti)=(vP(3)-P_ex(3));
     
-%     i=1;
-%     j=1;
-%     deltatT=[];
-%     while i<length(vP)
-%         deltaTT(j)=(vP(i)-P_ex(i));        
-%         deltatT(j)=delta_t/j;
-%         i=i+2;
-%         j=j+1;
-%     end
     
     
 end
-
-%exP=roots(sol_ex);
 
 
 %Newmark Plot
@@ -124,9 +112,6 @@ plot(vP,sol_ex(0), 'og');
 grid on
 legend('Newmark','Exact','vel')
 hold off
-
-%figure(2)
-%plot(deltatT,deltaTT);
 
 
 
