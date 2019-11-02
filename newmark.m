@@ -3,32 +3,28 @@ clear all
 format long
 %Time plot
 
-timeplot=7;
+timeplot=5;
 
 %Newmark Method
 %Initial Conditions
 u0=0;
-v0=2;
+v0=5;
 a0=0;
 
 %Parameter
 gamma=0.5;
 beta=[0,1/12,1/6,1/4,1/3];
-w=1;
+w=0.5;
 T=1/w;
 %time
 tf=100*T;
 
 
 for ib=1:length(beta)
-    delta_t=[0.001,0.005,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.5,0.55,0.60,0.7,0.8,0.9,1];
+    delta_t=[0.001,0.005,0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.5,0.55,0.60,0.7,0.8,0.9,1,2,5];
 
     deltaT=[];
     KE=[];
-% 
-%     u_n1(1)=u0;
-%     v_n1(1)=v0;
-%     a_n1(1)=a0;
 
     u_ex=[];
     vt=[];
@@ -62,9 +58,13 @@ for ib=1:length(beta)
 
         while it<=tf+delta_t
 
-            u_n1(i)=u_n1(i-1) + delta_t(dti)*v_n1(i-1)+0.5*delta_t(dti)^2*(1-2*beta(ib))*a_n1(i-1);
-            v_n1(i)=v_n1(i-1)+delta_t(dti)*(1-gamma)*a_n1(i-1);
-            a_n1(i)=-w^2*u_n1(i)/(1+w^2*beta(ib)*delta_t(dti)^2);
+            u_n10=u_n1(i-1)+delta_t(dti)*v_n1(i-1)+0.5*delta_t(dti)^2*(1-2*beta(ib))*a_n1(i-1);
+            v_n10=v_n1(i-1)+delta_t(dti)*(1-gamma)*a_n1(i-1);
+            a_n1(i)=-w^2*u_n10/(1+w^2*beta(ib)*delta_t(dti)^2);
+            
+            u_n1(i)=u_n1(i-1)+delta_t(dti)*v_n1(i-1)+0.5*delta_t(dti)^2*((1-2*beta(ib))*a_n1(i-1)+2*beta(ib)*a_n1(i));
+            v_n1(i)=v_n1(i-1)+delta_t(dti)*((1-gamma)*a_n1(i-1)+gamma*a_n1(i));
+            
 
             %Newmark Period
             if sign(u_n1(i))~=sign(u_n1(i-1)) 
@@ -88,8 +88,8 @@ for ib=1:length(beta)
 
         %Error Periodo en 3 indice
         deltaT(dti)=(vP(3)-P_ex(3));
-        deltaTT(dti)=deltaT(dti);
-        delta_tT(dti)=delta_t(dti);
+        deltaTT(dti)=deltaT(dti)/T;
+        delta_tT(dti)=delta_t(dti)/T;
         
         %Kinetic Energy
         maxvel(dti)=max(abs(v_n1(:)));
@@ -101,7 +101,7 @@ for ib=1:length(beta)
             hold on
             plot(vt,u_n1, '-r');
             plot(vt,v_n1, '-k');
-            tit='Solution Comparison beta='+string(ib)+' $\Delta t=$'+string(delta_t(timeplot));
+            tit='Solution Comparison beta='+string(beta(ib))+' $\Delta t=$'+string(delta_t(timeplot));
             title(tit,'Interpreter','latex','FontSize',17);
             xlabel('$t$','Interpreter','latex','FontSize',17);
             ylabel('$u$','Interpreter','latex','FontSize',17);
@@ -133,11 +133,12 @@ for ib=1:length(beta)
     %Kinetic Plots
     figure(7)
     hold on
-    plot(log10(delta_t),log10(KE));
+    KElog=log10(KE);
+    plot(delta_t,KElog);
     title('Kinetic Energy Plot','Interpreter','latex','FontSize',17);
     legend('beta=0','beta=1/12','beta=1/6','beta=1/4','beta=1/3');
-    xlabel('$log_{10}(\Delta t)$','Interpreter','latex','FontSize',17);
-    ylabel('$log_{10}(K)$','Interpreter','latex','FontSize',17);
+    xlabel('$\Delta t$','Interpreter','latex','FontSize',17);
+    ylabel('$K$','Interpreter','latex','FontSize',17);
     grid on
     hold off 
     
