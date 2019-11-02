@@ -3,21 +3,21 @@ clear all
 format long
 %Time plot
 
-timeplot=7;
+timeplot=10;
 
 %Newmark Method
 %Initial Conditions
 u0=0;
-v0=2;
+v0=5;
 a0=0;
 
 %Parameter
 gamma=0.5;
 beta=[0,1/12,1/6,1/4,1/3];
-w=1;
+w=0.5;
 T=1/w;
 %time
-tf=100*T;
+tf=20*T;
 
 
 for ib=1:length(beta)
@@ -25,10 +25,6 @@ for ib=1:length(beta)
 
     deltaT=[];
     KE=[];
-% 
-%     u_n1(1)=u0;
-%     v_n1(1)=v0;
-%     a_n1(1)=a0;
 
     u_ex=[];
     vt=[];
@@ -88,8 +84,8 @@ for ib=1:length(beta)
 
         %Error Periodo en 3 indice
         deltaT(dti)=(vP(3)-P_ex(3));
-        deltaTT(dti)=deltaT(dti);
-        delta_tT(dti)=delta_t(dti);
+        deltaTT(dti)=deltaT(dti)/T;
+        delta_tT(dti)=delta_t(dti)/T;
         
         %Kinetic Energy
         maxvel(dti)=max(abs(v_n1(:)));
@@ -101,7 +97,7 @@ for ib=1:length(beta)
             hold on
             plot(vt,u_n1, '-r');
             plot(vt,v_n1, '-k');
-            tit='Solution Comparison beta='+string(ib)+' $\Delta t=$'+string(delta_t(timeplot));
+            tit='Solution Comparison beta='+string(beta(ib))+' $\Delta t=$'+string(delta_t(timeplot));
             title(tit,'Interpreter','latex','FontSize',17);
             xlabel('$t$','Interpreter','latex','FontSize',17);
             ylabel('$u$','Interpreter','latex','FontSize',17);
