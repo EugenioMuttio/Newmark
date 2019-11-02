@@ -12,7 +12,7 @@ delta_t=T{3,1}-T{2,1};
 accsize=size(T);
 accsize=accsize(1);
 
-grav=980.665;
+grav=1;%9.80665;
 
 %Initial Conditions
 u0=0;
@@ -28,19 +28,22 @@ gamma=0.5;
 beta=0;
 
 %Dynamic Sistem Parameter
-xi=0.1;
-NTs=10;
-NT=linspace(0.1,10,NTs); %Natural Period
+xi=0.01;
+NTs1=100;
+NTs2=10;
+NT1=linspace(0.1,0.5,NTs1); %Natural Period
+NT2=linspace(0.6,10,NTs2); %Natural Period
+NT=[NT1 NT2];
 w=[];
 
 %Plots by chosen frequency
 wp=5;
 
-for i=1:NTs
+for i=1:(NTs1+NTs2)
     w(i)=1/NT(i);
 end
 
-for wi=1:NTs
+for wi=1:(NTs1+NTs2)
     u_n1=[];
     v_n1=[];
     a_n1=[];
@@ -58,10 +61,13 @@ for wi=1:NTs
     it=delta_t;
     while i<=accsize
 
-        u_n1(i)=u_n1(i-1) + delta_t*v_n1(i-1)+0.5*delta_t^2*(1-2*beta)*a_n1(i-1);
-        v_n1(i)=v_n1(i-1)+delta_t*(1-gamma)*a_n1(i-1);
-        a_n1(i)=(T{i,2}*grav-2*xi*w(wi)*v_n1(i)-w(wi)^2*u_n1(i))/(1+gamma*2*xi*w(wi)*delta_t+w(wi)^2*beta*delta_t^2);
-
+        u_n10=u_n1(i-1)+delta_t*v_n1(i-1)+0.5*delta_t^2*(1-2*beta)*a_n1(i-1);
+        v_n10=v_n1(i-1)+delta_t*(1-gamma)*a_n1(i-1);
+        a_n1(i)=(T{i,2}*grav-2*xi*w(wi)*v_n10-w(wi)^2*u_n10)/(1+gamma*2*xi*w(wi)*delta_t+w(wi)^2*beta*delta_t^2);
+        
+        u_n1(i)=u_n1(i-1)+delta_t*v_n1(i-1)+0.5*delta_t^2*((1-2*beta)*a_n1(i-1)+2*beta*a_n1(i));
+        v_n1(i)=v_n1(i-1)+delta_t*((1-gamma)*a_n1(i-1)+gamma*a_n1(i));
+                
         it=it+delta_t;
         i=i+1;
     end
@@ -113,25 +119,25 @@ grid on
 
 %Plot uMax-Periods
 figure(5)
-plot(NT,u_max, '-*r');
+plot(NT,u_max, '-r');
 title('Max Displacement - Natural Period','Interpreter','latex','FontSize',19);
-xlabel('$t$','Interpreter','latex','FontSize',19);
+xlabel('$T$','Interpreter','latex','FontSize',19);
 ylabel('$u_{max}$','Interpreter','latex','FontSize',19);
 grid on
 
 %Plot vMax-Periods
 figure(6)
-plot(NT,v_max, '-*r');
+plot(NT,v_max, '-r');
 title('Max Velocity - Natural Period','Interpreter','latex','FontSize',19);
-xlabel('$t$','Interpreter','latex','FontSize',19);
+xlabel('$T$','Interpreter','latex','FontSize',19);
 ylabel('$v_{max}$','Interpreter','latex','FontSize',19);
 grid on
 
 %Plot uMax-Periods
 figure(7)
-plot(NT,a_max, '-*r');
+plot(NT,a_max, '-r');
 title('Max Acceleration - Natural Period','Interpreter','latex','FontSize',19);
-xlabel('$t$','Interpreter','latex','FontSize',19);
+xlabel('$T$','Interpreter','latex','FontSize',19);
 ylabel('$a_{max}$','Interpreter','latex','FontSize',19);
 grid on
 
