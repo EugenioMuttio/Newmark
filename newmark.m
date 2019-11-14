@@ -3,7 +3,7 @@ clear all
 format long
 %Time plot
 
-timeplot=5;
+timeplot=18;
 
 %Newmark Method
 %Initial Conditions
@@ -17,7 +17,7 @@ beta=[0,1/12,1/6,1/4,1/3];
 w=0.5;
 T=1/w;
 %time
-tf=100*T;
+tf=500*T;
 
 
 for ib=1:length(beta)
@@ -109,9 +109,9 @@ for ib=1:length(beta)
             %Exact Displacement Plot
             n_ex=tf/0.001;
             vt_ex = linspace(0,tf,n+1);
-            plot(vt_ex,sol_ex(vt_ex),'-b');
+            plot(vt_ex,sol_ex(vt_ex),'--b');
             grid on
-            legend('Newmark','Velocity','Exact')
+            legend('Newmark','Velocity','Exact','FontSize',17)
             hold off
         end
 
@@ -124,8 +124,8 @@ for ib=1:length(beta)
     hold on
     plot(delta_tT,deltaTT);
     title('Error Plot','Interpreter','latex','FontSize',17);
-    legend('beta=0','beta=1/12','beta=1/6','beta=1/4','beta=1/3');
-    xlabel('$\Delta t / T$','Interpreter','latex','FontSize',17);
+    legend('beta=0','beta=1/12','beta=1/6','beta=1/4','beta=1/3','FontSize',17);
+    xlabel('$\Delta t / T$','Interpreter','latex','FontSize',15);
     ylabel('$\Delta T / T$','Interpreter','latex','FontSize',17);
     grid on
     hold off 
@@ -136,7 +136,7 @@ for ib=1:length(beta)
     KElog=log10(KE);
     plot(delta_t,KElog);
     title('Kinetic Energy Plot','Interpreter','latex','FontSize',17);
-    legend('beta=0','beta=1/12','beta=1/6','beta=1/4','beta=1/3');
+    legend('beta=0','beta=1/12','beta=1/6','beta=1/4','beta=1/3','FontSize',15);
     xlabel('$\Delta t$','Interpreter','latex','FontSize',17);
     ylabel('$K$','Interpreter','latex','FontSize',17);
     grid on

@@ -29,8 +29,8 @@ beta=1/12;
 
 %Dynamic Sistem Parameter
 xi=0.05;
-NTs1=500;
-NTs2=500;
+NTs1=50;
+NTs2=50;
 NT1=linspace(0.1,5,NTs1); %Natural Period
 NT2=linspace(5.1,10,NTs2); %Natural Period
 NT=[NT1 NT2];
@@ -40,7 +40,7 @@ w=[];
 wp=1;
 
 for i=1:(NTs1+NTs2)
-    w(i)=2*pi()/NT(i);
+    w(i)=1/NT(i);
 end
 
 for wi=1:(NTs1+NTs2)
